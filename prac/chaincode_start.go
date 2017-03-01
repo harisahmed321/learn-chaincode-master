@@ -55,3 +55,32 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
 	return nil, errors.New("Received unknown function query: " + function)
 }
+
+// Check user
+func (t *SimpleChaincode) AddUser(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+
+	var A string // Entities
+	var err error
+
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting name of the person to query")
+	}
+
+	user = args[0]
+
+	// Get the state from the ledger
+	checkExistingUser, err := stub.GetState(user)
+	if err != nil {
+		jsonResp := "{\"Error\":\"Failed to get state for user " + user + "\"}"
+		return nil, errors.New(jsonResp)
+	}
+
+	if user == nil {
+		jsonResp := "{\"Error\":\"no user found! " + user + "\"}"
+		return nil, errors.New(jsonResp)
+	}
+
+	jsonResp := "{\"Name\":\"" + user + "\",\"Amount\":\"" + string(Avalbytes) + "\"}"
+	fmt.Printf("Query Response:%s\n", jsonResp)
+	return Avalbytes, nil
+}
