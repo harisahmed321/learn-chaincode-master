@@ -23,9 +23,12 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
-
-	fmt.Println("ChainCode Issued")
-
+	A := args[0]
+	val := args[1]
+	err := stub.PutState(A,[]byte(args[1]))
+	if err := nil{
+		return nil,err
+	}
 	return nil, nil
 }
 
@@ -56,31 +59,34 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	return nil, errors.New("Received unknown function query: " + function)
 }
 
-// Check user
-func (t *SimpleChaincode) AddUser(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+// // Check user
+// func (t *SimpleChaincode) AddUser(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 
-	var A string // Entities
-	var err error
+// 	var A string // Entities
+// 	var err error
 
-	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting name of the person to query")
-	}
+// 	if len(args) != 1 {
+// 		return nil, errors.New("Incorrect number of arguments. Expecting name of the person to query")
+// 	}
 
-	user = args[0]
+// 	user = args[0]
 
-	// Get the state from the ledger
-	checkExistingUser, err := stub.GetState(user)
-	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get state for user " + user + "\"}"
-		return nil, errors.New(jsonResp)
-	}
+// 	// Get the state from the ledger
+// 	checkExistingUser, err := stub.GetState(user)
+// 	if err != nil {
+// 		jsonResp := "{\"Error\":\"Failed to get state for user " + user + "\"}"
+// 		return nil, errors.New(jsonResp)
+// 	}
 
-	if user == nil {
-		jsonResp := "{\"Error\":\"no user found! " + user + "\"}"
-		return nil, errors.New(jsonResp)
-	}
+// 	if checkExistingUser == nil {
+// 		createUser, err := stub.PutState(user)
+// 		if err != null {
+// 			jsonResp := "{\"Error\":\"Failed to create user \"}"
+// 			return nil, errors.New(jsonResp)
+// 		}
+// 		jsonResp := "{\"Name\":\"" + user + "\"}"
+// 		fmt.Printf("Query Response:%s\n", jsonResp)
+// 		return user, nil
+// 	}
 
-	jsonResp := "{\"Name\":\"" + user + "\",\"Amount\":\"" + string(Avalbytes) + "\"}"
-	fmt.Printf("Query Response:%s\n", jsonResp)
-	return Avalbytes, nil
-}
+// }
