@@ -49,7 +49,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 
 	var key, jsonResp string
-
+	var err error
 	key = args[0]
 	Avalbytes, err := stub.GetState(key)
 	if err != nil {
