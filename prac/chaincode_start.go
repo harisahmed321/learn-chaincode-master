@@ -47,17 +47,26 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 
 // Query is our entry point for queries
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	fmt.Println("query is running " + function)
 
-	// Handle different functions
-	if function == "dummy_query" { //read a variable
-		fmt.Println("hi there " + function) //error
-		return nil, nil
+	var key, jsonResp string
+
+	key = args[0]
+	Avalbytes, err := stub.GetState(key)
+	if err != nil {
+		jsonResp := "{\"Error\":\"Failed to get state for " + key + "\"}"
+		return nil, errors.New(jsonResp)
 	}
-	fmt.Println("query did not find func: " + function) //error
 
-	return nil, errors.New("Received unknown function query: " + function)
+	return Avalbytes, nil
+
 }
+
+// func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+// 	var key, jsonResp string
+
+// 	key = args[0]
+// 	err := stub.GetState(key)
+// }
 
 // // Check user
 // func (t *SimpleChaincode) AddUser(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
