@@ -23,8 +23,8 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
-	//var key = args[0]
-	err := stub.PutState("hello_world", []byte(args[0]))
+	var key = args[0]
+	err := stub.PutState(key, []byte(args[0]))
 	if err != nil {
 		return nil, err
 	}
