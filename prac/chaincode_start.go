@@ -24,6 +24,8 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
+	fmt.Println("ChainCode Issued")
+
 	return nil, nil
 }
 
