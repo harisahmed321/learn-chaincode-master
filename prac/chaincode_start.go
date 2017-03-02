@@ -43,9 +43,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	{ 
 		return t.Init(stub, "init", args)
 	} 
-	if function == "writee" 
+	if function == "write" 
 	{
-		return t.writee(stub, args)
+		return t.write(stub, args)
 	}
 	if function == "addUser" 
 	{
@@ -70,7 +70,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 	return nil, errors.New("Received unknown function query: " + function)
 }
 
-func (t *SimpleChaincode) writee(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var key, value string
 	var err error
 	fmt.Println("running write()")
