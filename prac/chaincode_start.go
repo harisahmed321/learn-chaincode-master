@@ -43,9 +43,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	{ 
 		return t.Init(stub, "init", args)
 	}
-	if function == "adduser" 
+	if function == "addUser" 
 	{
-		return t.adduser(stub, args)
+		return t.addUser(stub, args)
 	} 
 	if function == "write" 
 	{
@@ -87,10 +87,10 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 	return nil, nil
 }
 
-func (t *SimpleChaincode) adduser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func (t *SimpleChaincode) addUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var key, value string
 	var err error
-	fmt.Println("running addUser()")
+	fmt.Println("running write()")
 
 	if len(args) != 2 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
