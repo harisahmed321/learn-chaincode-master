@@ -42,17 +42,16 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	if function == "init" 
 	{ 
 		return t.Init(stub, "init", args)
+	}
+	if function == "adduser" 
+	{
+		return t.adduser(stub, args)
 	} 
 	if function == "write" 
 	{
 		return t.write(stub, args)
 	}
-	if function == "addUser" 
-	{
-		return t.addUser(stub, args)
-	}
-
-	fmt.Println("invoke did not find func: " + function) //error
+		fmt.Println("invoke did not find func: " + function) //error
 
 	return nil, errors.New("Received unknown function invocation: " + function)
 }
@@ -88,7 +87,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 	return nil, nil
 }
 
-func (t *SimpleChaincode) addUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func (t *SimpleChaincode) adduser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var key, value string
 	var err error
 	fmt.Println("running addUser()")
