@@ -39,16 +39,11 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	fmt.Println("invoke is running " + function)
 
 	// Handle different functions
-	if function == "init" 
-	{ 
+	if function == "init" { //initialize the chaincode state, used as reset
 		return t.Init(stub, "init", args)
-	} 
-	if function == "write" 
-	{
+	} else if function == "write" {
 		return t.write(stub, args)
-	}
-	if function == "addUser" 
-	{
+	} else if function == "addUser" {
 		return t.addUser(stub, args)
 	}
 
