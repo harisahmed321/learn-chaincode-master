@@ -144,7 +144,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 	if Adminbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	AdminVal, _ := strconv.ParseFloat(string(Adminbytes))
+	AdminVal, _ := strconv.ParseFloat(string(Adminbytes), 64)
 
 	Avalbytes, err := stub.GetState(A)
 	if err != nil {
@@ -153,7 +153,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 	if Avalbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	Aval, _ := strconv.ParseFloat(string(Avalbytes))
+	Aval, _ := strconv.ParseFloat(string(Avalbytes), 64)
 
 	Bvalbytes, err := stub.GetState(B)
 	if err != nil {
@@ -162,7 +162,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 	if Bvalbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	Bval, _ := strconv.ParseFloat(string(Bvalbytes))
+	Bval, _ := strconv.ParseFloat(string(Bvalbytes), 64)
 
 	// Perform the execution
 	Aval = Aval - X
