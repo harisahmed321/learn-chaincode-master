@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -117,4 +118,56 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
 	return valAsbytes, nil
+}
+
+func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+	var A, B string    // Entities
+	var Aval, Bval int // Asset holdings
+	var X int          // Transaction value
+	var err error
+
+	if len(args) != 3 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
+	}
+
+	A = args[0]
+	B = args[1]
+	X, err = strconv.Atoi(args[2])
+
+	Avalbytes, err := stub.GetState(A)
+	if err != nil {
+		return nil, errors.New("Failed to get state")
+	}
+	if Avalbytes == nil {
+		return nil, errors.New("Entity not found")
+	}
+	Aval, _ = strconv.Atoi(string(Avalbytes))
+
+	Bvalbytes, err := stub.GetState(B)
+	if err != nil {
+		return nil, errors.New("Failed to get state")
+	}
+	if Bvalbytes == nil {
+		return nil, errors.New("Entity not found")
+	}
+	Bval, _ = strconv.Atoi(string(Bvalbytes))
+
+	// Perform the execution
+	X, err = strconv.Atoi(args[2])
+	Aval = Aval - X
+	Bval = Bval + X
+
+	// Write the state back to the ledger
+	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
+	if err != nil {
+		return nil, err
+	}
+
+	err = stub.PutState(B, []byte(strconv.Itoa(Bval)))
+	if err != nil {
+		return nil, err
+	}
+
+	return nil, nil
 }
