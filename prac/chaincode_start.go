@@ -162,7 +162,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 	if Bvalbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	Bval, _ = :strconv.ParseFloat(string(Bvalbytes))
+	Bval, _ := strconv.ParseFloat(string(Bvalbytes))
 
 	// Perform the execution
 	Aval = Aval - X
