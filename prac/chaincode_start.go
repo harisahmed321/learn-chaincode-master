@@ -124,9 +124,8 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 
 func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
-	var A, B string    // Entities
-	var Aval, Bval int // Asset holdings
-	var X int          // Transaction value
+	var A, B, Admin string
+	var Aval, Bval, AdminVal, X float64
 	var err error
 
 	if len(args) != 3 {
@@ -135,7 +134,17 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 
 	A = args[0]
 	B = args[1]
-	X, err = strconv.Atoi(args[2])
+	X, err = strconv.ParseFloat(args[2])
+
+	Admin = "admin"
+	Adminbytes, err := stub.GetState(Admin)
+	if err != nil {
+		return nil, errors.New("Failed to get state")
+	}
+	if Adminbytes == nil {
+		return nil, errors.New("Entity not found")
+	}
+	AdminVal, _ = strconv.ParseFloat(string(Adminbytes))
 
 	Avalbytes, err := stub.GetState(A)
 	if err != nil {
@@ -144,7 +153,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 	if Avalbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	Aval, _ = strconv.Atoi(string(Avalbytes))
+	Aval, _ = strconv.ParseFloat(string(Avalbytes))
 
 	Bvalbytes, err := stub.GetState(B)
 	if err != nil {
@@ -153,15 +162,20 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 	if Bvalbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	Bval, _ = strconv.Atoi(string(Bvalbytes))
+	Bval, _ = strconv.ParseFloat(string(Bvalbytes))
 
 	// Perform the execution
-	X, err = strconv.Atoi(args[2])
 	Aval = Aval - X
-	Bval = Bval + X
+	AdminVal = (X * 0.20)
+	Bval = Bval + (X - (X * 0.20))
 
 	// Write the state back to the ledger
 	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
+	if err != nil {
+		return nil, err
+	}
+
+	err = stub.PutState(Admin, []byte(strconv.Itoa(AdminVal)))
 	if err != nil {
 		return nil, err
 	}
