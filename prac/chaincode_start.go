@@ -175,12 +175,12 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 		return nil, err
 	}
 
-	err = stub.PutState(Admin, []byte(strconv.Itoa(AdminVal)))
+	err = stub.PutState(Admin, []byte(strconv.FormatFloat(AdminVal, 'f', -1, 64)))
 	if err != nil {
 		return nil, err
 	}
 
-	err = stub.PutState(B, []byte(strconv.Itoa(Bval)))
+	err = stub.PutState(B, []byte(strconv.FormatFloat(Bval, 'f', -1, 64)))
 	if err != nil {
 		return nil, err
 	}
