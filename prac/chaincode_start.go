@@ -166,7 +166,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 
 	// Perform the execution
 	Aval = Aval - X
-	AdminVal = (X * 0.20)
+	AdminVal = AdminVal + (X * 0.20)
 	Bval = Bval + (X - (X * 0.20))
 
 	// Write the state back to the ledger
