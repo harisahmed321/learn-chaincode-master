@@ -134,7 +134,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 
 	A = args[0]
 	B = args[1]
-	X, err := strconv.ParseFloat(args[2])
+	X, err := strconv.ParseFloat(args[2], 64)
 
 	Admin = "admin"
 	Adminbytes, err := stub.GetState(Admin)
