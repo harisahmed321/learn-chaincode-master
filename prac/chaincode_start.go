@@ -170,7 +170,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 	Bval = Bval + (X - (X * 0.20))
 
 	// Write the state back to the ledger
-	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
+	err = stub.PutState(A, []byte(strconv.FormatFloat(Aval, 'f', -1, 64)))
 	if err != nil {
 		return nil, err
 	}
