@@ -155,57 +155,65 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 		return nil, errors.New("Incorrect number of arguments. Expecting Transactions")
 	}
 
-	//var trans Transaction
-
+	var transac Transaction
+	err = json.Unmarshal([]byte(args[0]), &transac)
+	if err != nil {
+		return nil, errors.New("Invalid Error. Expecting Transaction Input")
+	}
 	A = args[0]
 	B = args[1]
 	X, err := strconv.ParseFloat(args[2], 64)
 
-	Admin = "admin"
-	Adminbytes, err := stub.GetState(Admin)
+	//Get Admin State and Value
+	Adminbytes, err := stub.GetState(transac.UserAdmin)
 	if err != nil {
 		return nil, errors.New("Failed to get state")
 	}
 	if Adminbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	AdminVal, _ := strconv.ParseFloat(string(Adminbytes), 64)
+	// Convert byte into float
+	transac.UserAdminval, _ := strconv.ParseFloat(string(Adminbytes), 64)
 
-	Avalbytes, err := stub.GetState(A)
+	//Get UserA State and Value
+	Avalbytes, err := stub.GetState(transac.UserA)
 	if err != nil {
 		return nil, errors.New("Failed to get state")
 	}
 	if Avalbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	Aval, _ := strconv.ParseFloat(string(Avalbytes), 64)
+	// Convert byte into float
+	transac.UserAval, _ := strconv.ParseFloat(string(Avalbytes), 64)
 
-	Bvalbytes, err := stub.GetState(B)
+	//Get UserA State and Value
+	Bvalbytes, err := stub.GetState(transac.UserB)
 	if err != nil {
 		return nil, errors.New("Failed to get state")
 	}
 	if Bvalbytes == nil {
 		return nil, errors.New("Entity not found")
 	}
-	Bval, _ := strconv.ParseFloat(string(Bvalbytes), 64)
+	// Convert byte into float
+	transac.UserBval, _ := strconv.ParseFloat(string(Bvalbytes), 64)
 
-	// Perform the execution
-	Aval = Aval - X
-	AdminVal = AdminVal + (X * 0.20)
-	Bval = Bval + (X - (X * 0.20))
+	// Perform Amount Transactions
+	transac.UserAval = transac.UserAval - transac.TransactionAmount
+	transac.UserAdminval = transac.UserAdminval + (transac.TransactionAmount * transac.Tax)
+	transac.UserBval = transac.UserBval + (transac.TransactionAmount - (transac.TransactionAmount * transac.Tax))
 
 	// Write the state back to the ledger
-	err = stub.PutState(A, []byte(strconv.FormatFloat(Aval, 'f', -1, 64)))
+	err = stub.PutState(transac.UserA, []byte(strconv.FormatFloat(transac.UserAval, 'f', -1, 64)))
 	if err != nil {
 		return nil, err
 	}
 
-	err = stub.PutState(Admin, []byte(strconv.FormatFloat(AdminVal, 'f', -1, 64)))
+	err = stub.PutState(transac.UserAdmin, []byte(strconv.FormatFloat(transac.UserAdminval, 'f', -1, 64)))
 	if err != nil {
 		return nil, err
 	}
 
-	err = stub.PutState(B, []byte(strconv.FormatFloat(Bval, 'f', -1, 64)))
+	err = stub.PutState(transac.UserB, []byte(strconv.FormatFloat(transac.UserBval, 'f', -1, 64)))
 	if err != nil {
 		return nil, err
 	}
