@@ -160,9 +160,9 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 	if err != nil {
 		return nil, errors.New("Invalid Error. Expecting Transaction Input")
 	}
-	A = args[0]
-	B = args[1]
-	X, err := strconv.ParseFloat(args[2], 64)
+	// A = args[0]
+	// B = args[1]
+	// X, err := strconv.ParseFloat(args[2], 64)
 
 	//Get Admin State and Value
 	Adminbytes, err := stub.GetState(transac.UserAdmin)
