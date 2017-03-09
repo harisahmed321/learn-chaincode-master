@@ -1,12 +1,19 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
+
+// Structure
+type User struct {
+	UserID     string  `json:"userid"`
+	UserAmount float64 `json:"useramount"`
+}
 
 // SimpleChaincode example simple Chaincode implementation
 type SimpleChaincode struct {
@@ -91,12 +98,17 @@ func (t *SimpleChaincode) addUser(stub shim.ChaincodeStubInterface, args []strin
 	var err error
 	fmt.Println("running addUser()")
 
-	if len(args) != 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting UserId and UserAmount only")
 	}
-
-	key = args[0] //rename for fun
-	value = args[1]
+	var user User
+	err = json.Unmarshal([]byte(args[0]), &user)
+	if err != nil {
+		fmt.Println("error invalid")
+		return nil, error.New("error invalid user")
+	}
+	key = user.UserID
+	value = strconv.FormatFloat(user.UserAmount, 'f', -1, 64)
 	err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
 	if err != nil {
 		return nil, err
@@ -122,15 +134,28 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	return valAsbytes, nil
 }
 
+type Transaction struct {
+	UserA             string  `json:"usera"`
+	UserAval          float64 `json:"useraval"`
+	UserB             string  `json:"userb"`
+	UserBval          float64 `json:"userbval"`
+	UserAdmin         string  `json:"useradmin"`
+	UserAdminval      float64 `json:"useradminval"`
+	TransactionAmount float64 `json:"transactionamount"`
+	Tax               float64 `json:"tax"`
+}
+
 func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	var A, B, Admin string
 	//var Aval, Bval, AdminVal, X float64
 	var err error
 
-	if len(args) != 3 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting Transactions")
 	}
+
+	var trans Transaction
 
 	A = args[0]
 	B = args[1]
