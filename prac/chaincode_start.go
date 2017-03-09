@@ -155,7 +155,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 		return nil, errors.New("Incorrect number of arguments. Expecting Transactions")
 	}
 
-	var trans Transaction
+	//var trans Transaction
 
 	A = args[0]
 	B = args[1]
