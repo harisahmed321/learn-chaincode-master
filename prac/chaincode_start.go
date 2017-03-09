@@ -147,7 +147,7 @@ type Transaction struct {
 
 func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
-	var A, B, Admin string
+	//var A, B, Admin string
 	//var Aval, Bval, AdminVal, X float64
 	var err error
 
