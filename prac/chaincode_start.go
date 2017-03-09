@@ -105,7 +105,7 @@ func (t *SimpleChaincode) addUser(stub shim.ChaincodeStubInterface, args []strin
 	err = json.Unmarshal([]byte(args[0]), &user)
 	if err != nil {
 		fmt.Println("error invalid")
-		return nil, error.New("error invalid user")
+		return nil, errors.New("error invalid user")
 	}
 	key = user.UserID
 	value = strconv.FormatFloat(user.UserAmount, 'f', -1, 64)
