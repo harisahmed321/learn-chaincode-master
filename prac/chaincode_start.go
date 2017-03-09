@@ -173,7 +173,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 		return nil, errors.New("Entity not found")
 	}
 	// Convert byte into float
-	transac.UserAdminval, _ := strconv.ParseFloat(string(Adminbytes), 64)
+	transac.UserAdminval, _ = strconv.ParseFloat(string(Adminbytes), 64)
 
 	//Get UserA State and Value
 	Avalbytes, err := stub.GetState(transac.UserA)
@@ -184,7 +184,7 @@ func (t *SimpleChaincode) transfer(stub shim.ChaincodeStubInterface, args []stri
 		return nil, errors.New("Entity not found")
 	}
 	// Convert byte into float
-	transac.UserAval, _ := strconv.ParseFloat(string(Avalbytes), 64)
+	transac.UserAval, _ = strconv.ParseFloat(string(Avalbytes), 64)
 
 	//Get UserA State and Value
 	Bvalbytes, err := stub.GetState(transac.UserB)
